@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">VKNewsClient</string>
+    <string name="template_text">"It's not easy, but we are going to make it by God's grace!"</string>
+    <string name="navigation_item_main">Главная</string>
+    <string name="navigation_item_favourite">Избранное</string>
+    <string name="navigation_item_profile">Профиль</string>
+</resources>
