@@ -8,16 +8,45 @@ import francisco.simon.vknewsclient.ui.theme.domain.StatisticItem
 
 class MainViewModelVK : ViewModel() {
 
-    private val _feedPost = MutableLiveData<FeedPost>(FeedPost())
-    val feedPost: LiveData<FeedPost>
-        get() = _feedPost
-
-    fun updateCount(statisticItem: StatisticItem) {
-        val oldStatistics = _feedPost.value?.statistics ?: throw IllegalStateException()
-        val newStatistics = oldStatistics.toMutableList().apply {
-            remove(statisticItem)
-            add(statisticItem.copy(count = statisticItem.count + 1))
+    private val feedPostsInitial = mutableListOf<FeedPost>().apply {
+        repeat(10) {
+            add(FeedPost(id = it))
         }
-        _feedPost.value = _feedPost.value?.copy(statistics = newStatistics.toList())
     }
+    private val _feedPosts = MutableLiveData<List<FeedPost>>(feedPostsInitial)
+    val feedPosts: LiveData<List<FeedPost>>
+        get() = _feedPosts
+
+    fun updateCount(feedPost: FeedPost, statisticItem: StatisticItem) {
+        val oldPosts = _feedPosts.value?.toMutableList() ?: mutableListOf()
+        val oldStatistics = feedPost.statistics
+        val newStatistics = oldStatistics.toMutableList().apply {
+            replaceAll { oldItem ->
+                if (oldItem.type == statisticItem.type) {
+                    oldItem.copy(count = oldItem.count + 1)
+                } else {
+                    oldItem
+                }
+            }
+        }
+        val newFeedPost = feedPost.copy(statistics = newStatistics)
+
+        _feedPosts.value = oldPosts.apply {
+            replaceAll { oldFeedPost ->
+                if (oldFeedPost.id == newFeedPost.id) {
+                    newFeedPost
+                } else {
+                    oldFeedPost
+                }
+            }
+        }
+    }
+
+    fun remove(model: FeedPost) {
+        val oldPosts = _feedPosts.value?.toMutableList() ?: mutableListOf()
+        oldPosts.remove(model)
+        _feedPosts.value = oldPosts
+
+    }
+
 }

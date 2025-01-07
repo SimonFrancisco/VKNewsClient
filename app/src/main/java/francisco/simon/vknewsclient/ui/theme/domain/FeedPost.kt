@@ -4,6 +4,7 @@ import francisco.simon.vknewsclient.R
 
 
 data class FeedPost(
+    val id:Int = 0,
     val communityName: String = "/dev/null",
     val publicationDate: String = "20:55",
     val avatarResId: Int = R.drawable.post_comunity_thumbnail,

@@ -1,77 +1,120 @@
 package francisco.simon.vknewsclient.ui.theme
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import francisco.simon.vknewsclient.ui.theme.domain.FeedPost
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModelVK: MainViewModelVK) {
-
+fun MainScreen(
+    viewModelVK: MainViewModelVK
+) {
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                modifier = Modifier.height(55.dp),
-                containerColor =
-                MaterialTheme.colorScheme.surface
-            ) {
-                val selectedItemPosition = remember {
-                    mutableIntStateOf(0)
+            BottomBar()
+        }
+    ) { paddingValues ->
+
+        val feedPosts = viewModelVK.feedPosts.observeAsState(listOf())
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(feedPosts.value, key = { it.id }) { feedPost ->
+                val positionalThreshold = with(LocalDensity.current) {
+                    LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.5F
                 }
-                val items = listOf(Home, Favourite, Profile)
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedItemPosition.intValue == index,
-                        onClick = { selectedItemPosition.intValue = index },
-                        icon = {
-                            Icon(imageVector = item.icon, contentDescription = null)
+                val dismissBoxState = rememberSwipeToDismissBoxState(
+                    positionalThreshold = { positionalThreshold }
+                )
+                if (dismissBoxState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+                    viewModelVK.remove(feedPost)
+                }
+                SwipeToDismissBox(
+                    modifier = Modifier.animateItem(),
+                    state = dismissBoxState,
+                    enableDismissFromEndToStart = true,
+                    enableDismissFromStartToEnd = false,
+                    backgroundContent = {
+
+                    }
+                ) {
+                    PostCardVK(
+                        feedPost = feedPost,
+                        onCommentClickListener = { statisticItem ->
+                            viewModelVK.updateCount(feedPost, statisticItem)
                         },
-                        label = {
-                            Text(text = stringResource(id = item.titleResId))
+                        onLikeClickListener = { statisticItem ->
+                            viewModelVK.updateCount(feedPost, statisticItem)
+                        },
+                        onShareClickListener = { statisticItem ->
+                            viewModelVK.updateCount(feedPost, statisticItem)
+                        },
+                        onViewsClickListener = { statisticItem ->
+                            viewModelVK.updateCount(feedPost, statisticItem)
                         }
                     )
                 }
+
             }
         }
-    ) {
-        val feedPost = viewModelVK.feedPost.observeAsState(FeedPost())
-        PostCardVK(
-            modifier = Modifier.padding(8.dp),
-            feedPost = feedPost.value,
-            onCommentClickListener = viewModelVK::updateCount,
-            onLikeClickListener = viewModelVK::updateCount,
-            onShareClickListener = viewModelVK::updateCount,
-            onViewsClickListener = viewModelVK::updateCount
-        )
+
     }
 }
 
-//@Preview
-//@Composable
-//private fun PreviewCardDark() {
-//    FirstComposeAppTheme(darkTheme = true, dynamicColor = false) {
-//        MainScreen()
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun PreviewCardLight() {
-//    FirstComposeAppTheme(darkTheme = false, dynamicColor = false) {
-//        MainScreen()
-//    }
-//}
+@Composable
+private fun BottomBar() {
+    NavigationBar(
+        modifier = Modifier.height(55.dp),
+        containerColor =
+        MaterialTheme.colorScheme.surface
+    ) {
+        val selectedItemPosition = remember {
+            mutableIntStateOf(0)
+        }
+        val items = listOf(Home, Favourite, Profile)
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = selectedItemPosition.intValue == index,
+                onClick = { selectedItemPosition.intValue = index },
+                icon = {
+                    Icon(imageVector = item.icon, contentDescription = null)
+                },
+                label = {
+                    Text(text = stringResource(id = item.titleResId))
+                }
+            )
+        }
+    }
+}
+
+

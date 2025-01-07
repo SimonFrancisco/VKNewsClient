@@ -189,19 +189,3 @@ private fun PostHeader(feedPost: FeedPost) {
         )
     }
 }
-
-//@Preview
-//@Composable
-//private fun PreviewCardDark() {
-//    FirstComposeAppTheme(darkTheme = true, dynamicColor = false) {
-//        PostCardVK()
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun PreviewCardLight() {
-//    FirstComposeAppTheme(darkTheme = false, dynamicColor = false) {
-//        PostCardVK()
-//    }
-//}
