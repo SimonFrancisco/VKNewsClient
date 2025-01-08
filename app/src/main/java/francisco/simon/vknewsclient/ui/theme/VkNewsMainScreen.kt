@@ -1,28 +1,18 @@
 package francisco.simon.vknewsclient.ui.theme
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
@@ -31,81 +21,39 @@ import androidx.compose.ui.unit.dp
 fun MainScreen(
     viewModelVK: MainViewModelVK
 ) {
+    val selectedNavItem by viewModelVK.selectedNavItem.observeAsState(NavigationItem.Home)
     Scaffold(
         bottomBar = {
-            BottomBar()
+            BottomBar(viewModelVK, selectedNavItem)
         }
     ) { paddingValues ->
-
-        val feedPosts = viewModelVK.feedPosts.observeAsState(listOf())
-        LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues),
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(feedPosts.value, key = { it.id }) { feedPost ->
-                val positionalThreshold = with(LocalDensity.current) {
-                    LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.5F
-                }
-                val dismissBoxState = rememberSwipeToDismissBoxState(
-                    positionalThreshold = { positionalThreshold }
-                )
-                if (dismissBoxState.currentValue == SwipeToDismissBoxValue.EndToStart) {
-                    viewModelVK.remove(feedPost)
-                }
-                SwipeToDismissBox(
-                    modifier = Modifier.animateItem(),
-                    state = dismissBoxState,
-                    enableDismissFromEndToStart = true,
-                    enableDismissFromStartToEnd = false,
-                    backgroundContent = {
-
-                    }
-                ) {
-                    PostCardVK(
-                        feedPost = feedPost,
-                        onCommentClickListener = { statisticItem ->
-                            viewModelVK.updateCount(feedPost, statisticItem)
-                        },
-                        onLikeClickListener = { statisticItem ->
-                            viewModelVK.updateCount(feedPost, statisticItem)
-                        },
-                        onShareClickListener = { statisticItem ->
-                            viewModelVK.updateCount(feedPost, statisticItem)
-                        },
-                        onViewsClickListener = { statisticItem ->
-                            viewModelVK.updateCount(feedPost, statisticItem)
-                        }
-                    )
-                }
-
+        when (selectedNavItem) {
+            NavigationItem.Favourite -> Text(text = "Favourite", color = Color.Black)
+            NavigationItem.Home -> {
+                HomeScreen(viewModelVK = viewModelVK, paddingValues = paddingValues)
             }
+            NavigationItem.Profile -> Text(text = "Profile", color = Color.Black)
         }
 
     }
 }
 
 @Composable
-private fun BottomBar() {
+private fun BottomBar(
+    viewModelVK: MainViewModelVK,
+    selectedNavigationItem: NavigationItem
+) {
     NavigationBar(
         modifier = Modifier.height(55.dp),
         containerColor =
         MaterialTheme.colorScheme.surface
     ) {
-        val selectedItemPosition = remember {
-            mutableIntStateOf(0)
-        }
-        val items = listOf(Home, Favourite, Profile)
-        items.forEachIndexed { index, item ->
+
+        val items = listOf(NavigationItem.Home, NavigationItem.Favourite, NavigationItem.Profile)
+        items.forEach { item ->
             NavigationBarItem(
-                selected = selectedItemPosition.intValue == index,
-                onClick = { selectedItemPosition.intValue = index },
+                selected = selectedNavigationItem == item,
+                onClick = { viewModelVK.selectNavItem(item) },
                 icon = {
                     Icon(imageVector = item.icon, contentDescription = null)
                 },

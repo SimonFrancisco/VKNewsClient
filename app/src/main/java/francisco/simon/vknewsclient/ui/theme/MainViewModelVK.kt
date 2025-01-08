@@ -17,6 +17,14 @@ class MainViewModelVK : ViewModel() {
     val feedPosts: LiveData<List<FeedPost>>
         get() = _feedPosts
 
+    private val _selectedNavItem = MutableLiveData<NavigationItem>(NavigationItem.Home)
+    val selectedNavItem: LiveData<NavigationItem>
+        get() = _selectedNavItem
+
+    fun selectNavItem(item: NavigationItem) {
+        _selectedNavItem.value = item
+    }
+
     fun updateCount(feedPost: FeedPost, statisticItem: StatisticItem) {
         val oldPosts = _feedPosts.value?.toMutableList() ?: mutableListOf()
         val oldStatistics = feedPost.statistics
@@ -41,6 +49,7 @@ class MainViewModelVK : ViewModel() {
             }
         }
     }
+
 
     fun remove(model: FeedPost) {
         val oldPosts = _feedPosts.value?.toMutableList() ?: mutableListOf()

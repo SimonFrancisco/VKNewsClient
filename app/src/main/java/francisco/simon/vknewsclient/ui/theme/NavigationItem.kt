@@ -10,19 +10,20 @@ import francisco.simon.vknewsclient.R
 sealed class NavigationItem(
     val titleResId: Int,
     val icon: ImageVector
-)
+){
+    data object Home : NavigationItem(
+        titleResId = R.string.navigation_item_main,
+        icon = Icons.Outlined.Home
+    )
 
-data object Home : NavigationItem(
-    titleResId = R.string.navigation_item_main,
-    icon = Icons.Outlined.Home
-)
+    data object Favourite : NavigationItem(
+        titleResId = R.string.navigation_item_favourite,
+        icon = Icons.Outlined.Favorite
+    )
 
-data object Favourite : NavigationItem(
-    titleResId = R.string.navigation_item_favourite,
-    icon = Icons.Outlined.Favorite
-)
+    data object Profile : NavigationItem(
+        titleResId = R.string.navigation_item_profile,
+        icon = Icons.Outlined.Person
+    )
+}
 
-data object Profile : NavigationItem(
-    titleResId = R.string.navigation_item_profile,
-    icon = Icons.Outlined.Person
-)
