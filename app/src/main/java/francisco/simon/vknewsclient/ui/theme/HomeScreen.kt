@@ -22,6 +22,7 @@ fun HomeScreen(
     paddingValues: PaddingValues
 ) {
     val feedPosts = viewModelVK.feedPosts.observeAsState(listOf())
+
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues),
@@ -72,3 +73,4 @@ fun HomeScreen(
         }
     }
 }
+

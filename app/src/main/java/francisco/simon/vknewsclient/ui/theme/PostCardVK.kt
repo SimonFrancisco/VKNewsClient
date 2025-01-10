@@ -28,9 +28,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import francisco.simon.vknewsclient.R
-import francisco.simon.vknewsclient.ui.theme.domain.FeedPost
-import francisco.simon.vknewsclient.ui.theme.domain.StatisticItem
-import francisco.simon.vknewsclient.ui.theme.domain.StatisticType
+import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.StatisticItem
+import francisco.simon.vknewsclient.domain.StatisticType
 
 @Composable
 fun PostCardVK(

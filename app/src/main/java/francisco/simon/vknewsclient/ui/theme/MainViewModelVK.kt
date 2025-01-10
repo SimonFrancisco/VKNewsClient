@@ -3,8 +3,8 @@ package francisco.simon.vknewsclient.ui.theme
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import francisco.simon.vknewsclient.ui.theme.domain.FeedPost
-import francisco.simon.vknewsclient.ui.theme.domain.StatisticItem
+import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.StatisticItem
 
 class MainViewModelVK : ViewModel() {
 
