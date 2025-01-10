@@ -37,7 +37,8 @@ import francisco.simon.vknewsclient.domain.PostComment
 @Composable
 fun CommentsScreen(
     feedPost: FeedPost,
-    comments: List<PostComment>
+    comments: List<PostComment>,
+    onBackPressed:()-> Unit
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -45,7 +46,7 @@ fun CommentsScreen(
                 Text(text = "Comments for FeedPost Id: ${feedPost.id}")
             },
             navigationIcon = {
-                IconButton(onClick = {/*Do sth*/ }) {
+                IconButton(onClick = {onBackPressed() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back button"

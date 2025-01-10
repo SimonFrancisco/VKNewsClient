@@ -1,5 +1,6 @@
 package francisco.simon.vknewsclient.ui.theme
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -9,11 +10,13 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import francisco.simon.vknewsclient.domain.FeedPost
 
 
 @Composable
@@ -21,8 +24,41 @@ fun HomeScreen(
     viewModelVK: MainViewModelVK,
     paddingValues: PaddingValues
 ) {
-    val feedPosts = viewModelVK.feedPosts.observeAsState(listOf())
+    val screenState = viewModelVK.screenState.observeAsState(HomeScreenState.Initial)
 
+    when(val currentState = screenState.value){
+        is HomeScreenState.Comments -> {
+            CommentsScreen(
+                currentState.feedPost,
+                comments = currentState.comments,
+                onBackPressed = {
+                    viewModelVK.closeComments()
+                }
+            )
+            BackHandler {
+                viewModelVK.closeComments()
+            }
+        }
+        is HomeScreenState.Posts -> {
+            FeedPosts(
+                paddingValues = paddingValues,
+                viewModelVK = viewModelVK,
+                feedPosts = currentState.posts
+            )
+        }
+        HomeScreenState.Initial -> {
+
+        }
+    }
+
+}
+
+@Composable
+private fun FeedPosts(
+    paddingValues: PaddingValues,
+    feedPosts: List<FeedPost>,
+    viewModelVK: MainViewModelVK
+) {
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues),
@@ -34,7 +70,7 @@ fun HomeScreen(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(feedPosts.value, key = { it.id }) { feedPost ->
+        items(feedPosts, key = { it.id }) { feedPost ->
             val positionalThreshold = with(LocalDensity.current) {
                 LocalConfiguration.current.screenWidthDp.dp.toPx() * 0.5F
             }
@@ -55,8 +91,8 @@ fun HomeScreen(
             ) {
                 PostCardVK(
                     feedPost = feedPost,
-                    onCommentClickListener = { statisticItem ->
-                        viewModelVK.updateCount(feedPost, statisticItem)
+                    onCommentClickListener = {
+                        viewModelVK.showComments(feedPost)
                     },
                     onLikeClickListener = { statisticItem ->
                         viewModelVK.updateCount(feedPost, statisticItem)
