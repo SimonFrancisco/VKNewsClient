@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -30,15 +31,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import francisco.simon.vknewsclient.domain.FeedPost
 import francisco.simon.vknewsclient.domain.PostComment
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
+    onBackPressed: () -> Unit
+) {
+    val viewModel: CommentsViewModel = viewModel()
+    val screenState = viewModel.screenState
+        .observeAsState(CommentsScreenState.Initial)
+
+    when (val currentState = screenState.value) {
+        is CommentsScreenState.Comments -> {
+            CommentScreenSpecific(
+                onBackPressed = onBackPressed,
+                feedPost = currentState.feedPost,
+                comments = currentState.comments
+            )
+
+        }
+
+        CommentsScreenState.Initial -> {
+
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CommentScreenSpecific(
+    onBackPressed: () -> Unit,
     feedPost: FeedPost,
-    comments: List<PostComment>,
-    onBackPressed:()-> Unit
+    comments: List<PostComment>
 ) {
     Scaffold(topBar = {
         TopAppBar(
@@ -46,7 +72,7 @@ fun CommentsScreen(
                 Text(text = "Comments for FeedPost Id: ${feedPost.id}")
             },
             navigationIcon = {
-                IconButton(onClick = {onBackPressed() }) {
+                IconButton(onClick = { onBackPressed() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back button"
@@ -81,8 +107,10 @@ private fun CommentItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp,
-                vertical = 4.dp)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )
     ) {
         Image(
             modifier = Modifier
