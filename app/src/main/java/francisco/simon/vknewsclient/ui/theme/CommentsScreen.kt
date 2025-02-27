@@ -32,14 +32,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import francisco.simon.vknewsclient.CommentsViewModelFactory
 import francisco.simon.vknewsclient.domain.FeedPost
 import francisco.simon.vknewsclient.domain.PostComment
 
 @Composable
 fun CommentsScreen(
+    feedPost: FeedPost,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(factory = CommentsViewModelFactory(feedPost = feedPost))
     val screenState = viewModel.screenState
         .observeAsState(CommentsScreenState.Initial)
 

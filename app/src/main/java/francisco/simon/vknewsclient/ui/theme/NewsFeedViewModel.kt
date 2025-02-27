@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import francisco.simon.vknewsclient.domain.FeedPost
 import francisco.simon.vknewsclient.domain.StatisticItem
 
-class NewFeedViewModelVK : ViewModel() {
+class NewsFeedViewModel : ViewModel() {
 
     private val feedPostsInitial = mutableListOf<FeedPost>().apply {
         repeat(10) {

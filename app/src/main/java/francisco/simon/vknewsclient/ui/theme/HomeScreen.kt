@@ -23,7 +23,7 @@ fun HomeScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
-    val viewModelVK: NewFeedViewModelVK = viewModel()
+    val viewModelVK: NewsFeedViewModel = viewModel()
     val screenState = viewModelVK.screenState
         .observeAsState(NewsFeedScreenState.Initial)
 
@@ -48,7 +48,7 @@ fun HomeScreen(
 private fun FeedPosts(
     paddingValues: PaddingValues,
     feedPosts: List<FeedPost>,
-    viewModelVK: NewFeedViewModelVK,
+    viewModelVK: NewsFeedViewModel,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
     LazyColumn(
