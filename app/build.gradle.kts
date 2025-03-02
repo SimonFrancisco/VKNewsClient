@@ -67,4 +67,21 @@ dependencies {
 
     //Gson
     implementation(libs.gson)
+
+    //Coil compose
+    implementation(libs.coil.compose)
+    //Coil сеть
+    implementation(libs.coil.network)
+
+    //vk
+    implementation(libs.vk.core)
+    implementation(libs.vk.api)
+
+    //OkHttpClient
+    implementation(libs.okHttpClient)
+    //HttpLoggingInterceptor
+    implementation(libs.httpLoggingInterceptor)
+
+    //Retrofit
+    implementation(libs.retrofit)
 }

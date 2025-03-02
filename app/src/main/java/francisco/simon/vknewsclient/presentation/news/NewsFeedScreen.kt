@@ -1,4 +1,4 @@
-package francisco.simon.vknewsclient.ui.theme
+package francisco.simon.vknewsclient.presentation.news
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,14 +19,13 @@ import francisco.simon.vknewsclient.domain.FeedPost
 
 
 @Composable
-fun HomeScreen(
+fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
     val viewModelVK: NewsFeedViewModel = viewModel()
     val screenState = viewModelVK.screenState
         .observeAsState(NewsFeedScreenState.Initial)
-
 
     when (val currentState = screenState.value) {
         is NewsFeedScreenState.Posts -> {

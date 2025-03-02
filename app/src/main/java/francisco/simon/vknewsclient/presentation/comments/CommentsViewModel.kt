@@ -1,4 +1,4 @@
-package francisco.simon.vknewsclient.ui.theme
+package francisco.simon.vknewsclient.presentation.comments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

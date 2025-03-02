@@ -1,9 +1,8 @@
-package francisco.simon.vknewsclient
+package francisco.simon.vknewsclient.presentation.comments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import francisco.simon.vknewsclient.domain.FeedPost
-import francisco.simon.vknewsclient.ui.theme.CommentsViewModel
 
 class CommentsViewModelFactory(
     private val feedPost: FeedPost

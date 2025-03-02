@@ -1,4 +1,4 @@
-package francisco.simon.vknewsclient.ui.theme
+package francisco.simon.vknewsclient.presentation.comments
 
 import francisco.simon.vknewsclient.domain.FeedPost
 import francisco.simon.vknewsclient.domain.PostComment
