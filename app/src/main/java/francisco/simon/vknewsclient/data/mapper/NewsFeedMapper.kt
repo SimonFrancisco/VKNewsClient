@@ -15,10 +15,13 @@ class NewsFeedMapper {
         val result = mutableListOf<FeedPost>()
         val posts = responseDto.newsFeedContent.posts
         val groups = responseDto.newsFeedContent.groups
+        val validPosts = posts.filter {
+            it.views != null
+        }
 
-
-        for (post in posts) {
+        for (post in validPosts) {
             val group = groups.find { it.id == post.communityId.absoluteValue } ?: continue
+
             val feedPost = FeedPost(
                 id = post.id,
                 communityName = group.name,
@@ -29,9 +32,11 @@ class NewsFeedMapper {
                 statistics = listOf(
                     StatisticItem(StatisticType.LIKES, post.likes.count),
                     StatisticItem(StatisticType.COMMENTS, post.comments.count),
-                    StatisticItem(StatisticType.VIEWS, post.views.count),
+                    StatisticItem(StatisticType.VIEWS, post.views?.count ?: 0),
                     StatisticItem(StatisticType.SHARES, post.reposts.count)
-                )
+                ),
+                isLiked = post.likes.userLikes > 0,
+                communityId = post.communityId
             )
             result.add(feedPost)
         }
@@ -39,7 +44,7 @@ class NewsFeedMapper {
     }
 
     private fun mapTimestampToDate(timestamp: Long): String {
-        val date = Date(timestamp *1000)
+        val date = Date(timestamp * 1000)
         return SimpleDateFormat("dd MMMM yyyy, hh:mm", Locale.getDefault()).format(date)
     }
 }
