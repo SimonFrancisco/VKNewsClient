@@ -24,7 +24,7 @@ class NewsFeedRepository(application: Application) {
 
     suspend fun loadPosts(): List<FeedPost> {
         val startFrom = nextFrom
-        if (startFrom == null && feedPosts.isNotEmpty()){
+        if (startFrom == null && feedPosts.isNotEmpty()) {
             return feedPosts
         }
         val response = if (startFrom == null) {
@@ -69,6 +69,24 @@ class NewsFeedRepository(application: Application) {
         val newPost = feedPost.copy(statistics = newStatistics, isLiked = !feedPost.isLiked)
         val postIndex = _feedPosts.indexOf(feedPost)
         _feedPosts[postIndex] = newPost
+    }
+
+    suspend fun deletePost(feedPost: FeedPost) {
+        val ownerId = if (feedPost.communityId > 0) {
+            -feedPost.communityId
+        } else {
+            feedPost.communityId
+        }
+        val response = apiService.ignorePost(
+            token = getAccessToken(),
+            ownerId = ownerId,
+            itemId = feedPost.id
+        )
+        val status = response.ignorePost.status
+        if (status) {
+            _feedPosts.remove(feedPost)
+        }
+
     }
 
 }
