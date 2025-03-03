@@ -17,16 +17,30 @@ class NewsFeedRepository(application: Application) {
     private val mapper = NewsFeedMapper()
 
     private val _feedPosts = mutableListOf<FeedPost>()
-    val feedPost: List<FeedPost>
+    val feedPosts: List<FeedPost>
         get() = _feedPosts.toList()
 
+    private var nextFrom: String? = null
+
     suspend fun loadPosts(): List<FeedPost> {
-        val response = apiService.loadPosts(
-            token = getAccessToken()
-        )
+        val startFrom = nextFrom
+        if (startFrom == null && feedPosts.isNotEmpty()){
+            return feedPosts
+        }
+        val response = if (startFrom == null) {
+            apiService.loadPosts(
+                token = getAccessToken()
+            )
+        } else {
+            apiService.loadPosts(
+                token = getAccessToken(),
+                startFrom = startFrom
+            )
+        }
+        nextFrom = response.newsFeedContent.nextFrom
         val posts = mapper.mapResponseToPosts(response)
         _feedPosts.addAll(posts)
-        return posts
+        return feedPosts
     }
 
     private fun getAccessToken(): String {
