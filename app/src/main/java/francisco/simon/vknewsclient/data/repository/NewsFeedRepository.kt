@@ -6,6 +6,7 @@ import com.vk.api.sdk.auth.VKAccessToken
 import francisco.simon.vknewsclient.data.mapper.NewsFeedMapper
 import francisco.simon.vknewsclient.data.network.ApiFactory
 import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.PostComment
 import francisco.simon.vknewsclient.domain.StatisticItem
 import francisco.simon.vknewsclient.domain.StatisticType
 
@@ -86,7 +87,15 @@ class NewsFeedRepository(application: Application) {
         if (status) {
             _feedPosts.remove(feedPost)
         }
+    }
 
+    suspend fun getComments(feedPost: FeedPost): List<PostComment> {
+        val response = apiService.getComments(
+            token = getAccessToken(),
+            ownerId = feedPost.communityId,
+            postId = feedPost.id
+        )
+        return mapper.mapResponseToComments(response)
     }
 
 }

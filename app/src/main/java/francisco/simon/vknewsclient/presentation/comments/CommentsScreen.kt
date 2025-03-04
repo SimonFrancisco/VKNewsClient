@@ -1,6 +1,7 @@
 package francisco.simon.vknewsclient.presentation.comments
 
-import androidx.compose.foundation.Image
+import android.app.Application
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -27,21 +28,27 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
+import francisco.simon.vknewsclient.R
 import francisco.simon.vknewsclient.domain.FeedPost
 import francisco.simon.vknewsclient.domain.PostComment
-import francisco.simon.vknewsclient.ui.theme.VKNewsClientTheme
 
 @Composable
 fun CommentsScreen(
     feedPost: FeedPost,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel(factory = CommentsViewModelFactory(feedPost = feedPost))
+    val viewModel: CommentsViewModel = viewModel(
+        factory = CommentsViewModelFactory(
+            feedPost = feedPost,
+            LocalContext.current.applicationContext as Application
+        )
+    )
     val screenState = viewModel.screenState
         .observeAsState(CommentsScreenState.Initial)
 
@@ -49,12 +56,10 @@ fun CommentsScreen(
         is CommentsScreenState.Comments -> {
             CommentScreenSpecific(
                 onBackPressed = onBackPressed,
-                feedPost = currentState.feedPost,
                 comments = currentState.comments
             )
 
         }
-
         CommentsScreenState.Initial -> {
 
         }
@@ -65,13 +70,12 @@ fun CommentsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun CommentScreenSpecific(
     onBackPressed: () -> Unit,
-    feedPost: FeedPost,
     comments: List<PostComment>
 ) {
     Scaffold(topBar = {
         TopAppBar(
             title = {
-                Text(text = "Comments for FeedPost Id: ${feedPost.id}")
+                Text(text = stringResource(R.string.commentsTitle))
             },
             navigationIcon = {
                 IconButton(onClick = { onBackPressed() }) {
@@ -83,7 +87,6 @@ private fun CommentScreenSpecific(
             }
         )
     }) { paddingValues ->
-
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues),
@@ -92,7 +95,8 @@ private fun CommentScreenSpecific(
                 start = 8.dp,
                 end = 8.dp,
                 bottom = 72.dp
-            )
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items = comments, key = { it.id }) { comment ->
                 CommentItem(comment)
@@ -114,17 +118,17 @@ private fun CommentItem(
                 vertical = 4.dp
             )
     ) {
-        Image(
+        AsyncImage(
             modifier = Modifier
-                .size(24.dp)
+                .size(48.dp)
                 .clip(shape = CircleShape),
-            painter = painterResource(id = comment.authorAvatarId),
+            model = comment.authorAvatarUrl,
             contentDescription = null, contentScale = ContentScale.Crop
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Column() {
+        Column {
             Text(
-                text = "${comment.authorName} CommentId: ${comment.id}",
+                text = comment.authorName,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 12.sp
             )
@@ -139,14 +143,6 @@ private fun CommentItem(
                 fontSize = 12.sp
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun PreviewComment() {
-    VKNewsClientTheme(dynamicColor = false) {
-        CommentItem(comment = PostComment(id = 5))
 
     }
 }

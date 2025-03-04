@@ -8,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import francisco.simon.vknewsclient.domain.FeedPost
 
 class NavigationState(val navHostController: NavHostController) {
-
     fun navigateTo(route: String) {
         navHostController.navigate(route) {
             launchSingleTop = true

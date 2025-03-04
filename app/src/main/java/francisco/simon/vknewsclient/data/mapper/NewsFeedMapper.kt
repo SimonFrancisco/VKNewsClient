@@ -1,7 +1,9 @@
 package francisco.simon.vknewsclient.data.mapper
 
+import francisco.simon.vknewsclient.data.model.CommentsResponseDto
 import francisco.simon.vknewsclient.data.model.NewsFeedResponseDto
 import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.PostComment
 import francisco.simon.vknewsclient.domain.StatisticItem
 import francisco.simon.vknewsclient.domain.StatisticType
 import java.text.SimpleDateFormat
@@ -39,6 +41,27 @@ class NewsFeedMapper {
                 communityId = post.communityId
             )
             result.add(feedPost)
+        }
+        return result
+    }
+
+    fun mapResponseToComments(response: CommentsResponseDto): List<PostComment> {
+        val result = mutableListOf<PostComment>()
+        val comments = response.commentsResponse.comments
+        val profiles = response.commentsResponse.profiles
+        for (comment in comments) {
+            if (comment.text.isBlank()) {
+                continue
+            }
+            val author = profiles.firstOrNull { it.id == comment.authorId } ?: continue
+            val postComment = PostComment(
+                id = comment.id,
+                authorName = "${author.firstName} ${author.lastName}",
+                authorAvatarUrl = author.avatarUrl,
+                commentText = comment.text,
+                publicationDate = mapTimestampToDate(comment.date)
+            )
+            result.add(postComment)
         }
         return result
     }
