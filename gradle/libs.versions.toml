@@ -1,6 +1,6 @@
 [versions]
 agp = "8.7.3"
-kotlin = "2.0.20"
+kotlin = "2.1.10"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -15,6 +15,9 @@ coil_version = "3.0.4"
 vk_version = "4.1.0"
 okHttpClient_version = "4.12.0"
 retrofit_version="2.11.0"
+
+ksp_version ="2.1.10-1.0.29"
+dagger2_version = "2.55"
 
 
 
@@ -34,6 +37,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
 #Compose LiveData
 compose-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose_livedata_version" }
 #Compose navigation
@@ -59,7 +63,12 @@ httpLoggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-inter
 #Retrofit
 retrofit = {group = "com.squareup.retrofit2", name = "retrofit", version.ref ="retrofit_version"}
 
-
+#Dagger2
+dagger2 = { group = "com.google.dagger", name = "dagger", version.ref = "dagger2_version" }
+#Dagger2 кодогенратор
+dagger2-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger2_version" }
+#Dagger2 аннотации
+dagger2-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger2_version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -68,3 +77,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 
 #kotlin-parcelize
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+
+#ksp
+ksp = {id = "com.google.devtools.ksp", version.ref ="ksp_version"}

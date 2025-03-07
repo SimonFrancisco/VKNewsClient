@@ -1,4 +1,4 @@
-package francisco.simon.vknewsclient.presentation.main
+package francisco.simon.vknewsclient.domain.entity
 
 sealed class AuthState {
     data object Initial : AuthState()

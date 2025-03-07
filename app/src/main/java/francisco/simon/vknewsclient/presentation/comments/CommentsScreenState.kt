@@ -1,7 +1,7 @@
 package francisco.simon.vknewsclient.presentation.comments
 
-import francisco.simon.vknewsclient.domain.FeedPost
-import francisco.simon.vknewsclient.domain.PostComment
+import francisco.simon.vknewsclient.domain.entity.FeedPost
+import francisco.simon.vknewsclient.domain.entity.PostComment
 
 sealed class CommentsScreenState {
     data object Initial : CommentsScreenState()

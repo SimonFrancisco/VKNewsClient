@@ -1,4 +1,4 @@
-package francisco.simon.vknewsclient.domain
+package francisco.simon.vknewsclient.domain.entity
 
 data class PostComment(
     val id: Long,

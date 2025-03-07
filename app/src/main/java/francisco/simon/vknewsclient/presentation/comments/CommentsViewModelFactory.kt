@@ -3,7 +3,7 @@ package francisco.simon.vknewsclient.presentation.comments
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.entity.FeedPost
 
 class CommentsViewModelFactory(
     private val feedPost: FeedPost,

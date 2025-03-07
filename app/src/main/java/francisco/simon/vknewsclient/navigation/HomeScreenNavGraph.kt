@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.entity.FeedPost
 
 fun NavGraphBuilder.homeScreenNavGraph(
     newsFeedScreenContent: @Composable () -> Unit,

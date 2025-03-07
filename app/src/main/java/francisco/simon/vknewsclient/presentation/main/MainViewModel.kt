@@ -2,38 +2,25 @@ package francisco.simon.vknewsclient.presentation.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
-import com.vk.api.sdk.auth.VKAuthenticationResult
+import androidx.lifecycle.viewModelScope
+import francisco.simon.vknewsclient.data.repository.NewsFeedRepositoryImpl
+import francisco.simon.vknewsclient.domain.usecases.CheckAuthStateUseCase
+import francisco.simon.vknewsclient.domain.usecases.GetAuthStateFlowUseCase
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _authState = MutableLiveData<AuthState>(AuthState.Initial)
-    val authState: LiveData<AuthState> = _authState
+    private val repository = NewsFeedRepositoryImpl(application)
 
-    init {
-        val storage = VKPreferencesKeyValueStorage(application)
-        val token = VKAccessToken.restore(storage)
-        val loggedIn = token != null && token.isValid
-        _authState.value = if (loggedIn) {
-            AuthState.Authorized
-        } else {
-            AuthState.NotAuthorized
-        }
-    }
+    private val getAuthStateUseCase = GetAuthStateFlowUseCase(repository)
+    private val checkAuthStateUseCase = CheckAuthStateUseCase(repository)
 
-    fun performAuthResult(result: VKAuthenticationResult) {
-        when (result) {
-            is VKAuthenticationResult.Failed -> {
-                _authState.value = AuthState.NotAuthorized
-            }
+    val authState = getAuthStateUseCase()
 
-            is VKAuthenticationResult.Success -> {
-                _authState.value = AuthState.Authorized
 
-            }
+    fun performAuthResult() {
+        viewModelScope.launch {
+            checkAuthStateUseCase()
         }
     }
 

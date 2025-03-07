@@ -24,7 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import francisco.simon.vknewsclient.R
-import francisco.simon.vknewsclient.domain.FeedPost
-import francisco.simon.vknewsclient.domain.PostComment
+import francisco.simon.vknewsclient.domain.entity.FeedPost
+import francisco.simon.vknewsclient.domain.entity.PostComment
 
 @Composable
 fun CommentsScreen(
@@ -50,7 +50,7 @@ fun CommentsScreen(
         )
     )
     val screenState = viewModel.screenState
-        .observeAsState(CommentsScreenState.Initial)
+        .collectAsState(CommentsScreenState.Initial)
 
     when (val currentState = screenState.value) {
         is CommentsScreenState.Comments -> {

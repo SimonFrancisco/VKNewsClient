@@ -2,10 +2,10 @@ package francisco.simon.vknewsclient.data.mapper
 
 import francisco.simon.vknewsclient.data.model.CommentsResponseDto
 import francisco.simon.vknewsclient.data.model.NewsFeedResponseDto
-import francisco.simon.vknewsclient.domain.FeedPost
-import francisco.simon.vknewsclient.domain.PostComment
-import francisco.simon.vknewsclient.domain.StatisticItem
-import francisco.simon.vknewsclient.domain.StatisticType
+import francisco.simon.vknewsclient.domain.entity.FeedPost
+import francisco.simon.vknewsclient.domain.entity.PostComment
+import francisco.simon.vknewsclient.domain.entity.StatisticItem
+import francisco.simon.vknewsclient.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

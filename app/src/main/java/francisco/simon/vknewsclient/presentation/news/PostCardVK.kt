@@ -30,9 +30,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import francisco.simon.vknewsclient.R
-import francisco.simon.vknewsclient.domain.FeedPost
-import francisco.simon.vknewsclient.domain.StatisticItem
-import francisco.simon.vknewsclient.domain.StatisticType
+import francisco.simon.vknewsclient.domain.entity.FeedPost
+import francisco.simon.vknewsclient.domain.entity.StatisticItem
+import francisco.simon.vknewsclient.domain.entity.StatisticType
 import francisco.simon.vknewsclient.ui.theme.DarkRed
 
 @Composable

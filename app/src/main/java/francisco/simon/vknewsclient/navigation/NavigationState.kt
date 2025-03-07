@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import francisco.simon.vknewsclient.domain.FeedPost
+import francisco.simon.vknewsclient.domain.entity.FeedPost
 
 class NavigationState(val navHostController: NavHostController) {
     fun navigateTo(route: String) {
