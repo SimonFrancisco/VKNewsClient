@@ -1,6 +1,5 @@
 package francisco.simon.vknewsclient.presentation.comments
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,17 +36,20 @@ import coil3.compose.AsyncImage
 import francisco.simon.vknewsclient.R
 import francisco.simon.vknewsclient.domain.entity.FeedPost
 import francisco.simon.vknewsclient.domain.entity.PostComment
+import francisco.simon.vknewsclient.presentation.NewFeedApplication
 
 @Composable
 fun CommentsScreen(
     feedPost: FeedPost,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
+
+    val component = (LocalContext.current.applicationContext as NewFeedApplication)
+        .component.getCommentsScreenComponentFactory().create(feedPost)
+
+
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(
-            feedPost = feedPost,
-            LocalContext.current.applicationContext as Application
-        )
+        factory = component.getViewModelFactory()
     )
     val screenState = viewModel.screenState
         .collectAsState(CommentsScreenState.Initial)

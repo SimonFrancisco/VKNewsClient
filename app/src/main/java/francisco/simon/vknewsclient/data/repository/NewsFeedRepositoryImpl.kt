@@ -1,10 +1,9 @@
 package francisco.simon.vknewsclient.data.repository
 
-import android.app.Application
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import francisco.simon.vknewsclient.data.mapper.NewsFeedMapper
-import francisco.simon.vknewsclient.data.network.ApiFactory
+import francisco.simon.vknewsclient.data.network.ApiService
 import francisco.simon.vknewsclient.domain.entity.AuthState
 import francisco.simon.vknewsclient.domain.entity.FeedPost
 import francisco.simon.vknewsclient.domain.entity.PostComment
@@ -21,14 +20,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
+class NewsFeedRepositoryImpl @Inject constructor(
+    private val apiService: ApiService,
+    private val mapper: NewsFeedMapper,
+    private val storage: VKPreferencesKeyValueStorage
+) : NewsFeedRepository {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token
         get() = VKAccessToken.restore(storage)
-    private val apiService = ApiFactory.apiService
-    private val mapper = NewsFeedMapper()
     private val scope = CoroutineScope(Dispatchers.IO)
     private val nextDataNeedEvents = MutableSharedFlow<Unit>(replay = 1)
     private val refreshedListFlow = MutableSharedFlow<List<FeedPost>>()
