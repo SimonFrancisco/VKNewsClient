@@ -15,6 +15,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +24,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import francisco.simon.vknewsclient.domain.entity.FeedPost
-import francisco.simon.vknewsclient.presentation.ViewModelFactory
+import francisco.simon.vknewsclient.presentation.getApplicationComponent
 import francisco.simon.vknewsclient.ui.theme.DarkBlue
 
 
@@ -31,12 +32,29 @@ import francisco.simon.vknewsclient.ui.theme.DarkBlue
 fun NewsFeedScreen(
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit,
-    viewModelFactory: ViewModelFactory
 ) {
-    val viewModelVK: NewsFeedViewModel = viewModel(factory = viewModelFactory)
+    val component = getApplicationComponent()
+    val viewModelVK: NewsFeedViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModelVK.screenState
         .collectAsState(NewsFeedScreenState.Initial)
+    NewsFeedScreenContent(
+        screenState = screenState,
+        paddingValues = paddingValues,
+        viewModelVK = viewModelVK,
+        onCommentClickListener = onCommentClickListener
+    )
 
+
+}
+
+@Composable
+fun NewsFeedScreenContent(
+    modifier: Modifier = Modifier,
+    screenState: State<NewsFeedScreenState>,
+    viewModelVK: NewsFeedViewModel,
+    paddingValues: PaddingValues,
+    onCommentClickListener: (FeedPost) -> Unit
+) {
     when (val currentState = screenState.value) {
         is NewsFeedScreenState.Posts -> {
             FeedPosts(
@@ -55,13 +73,13 @@ fun NewsFeedScreen(
         NewsFeedScreenState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center){
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator(color = DarkBlue)
 
             }
         }
     }
-
 }
 
 @Composable

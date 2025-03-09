@@ -15,6 +15,7 @@ import kotlin.math.absoluteValue
 class NewsFeedMapper @Inject constructor() {
 
     fun mapResponseToPosts(responseDto: NewsFeedResponseDto): List<FeedPost> {
+
         val result = mutableListOf<FeedPost>()
         val posts = responseDto.newsFeedContent.posts
         val groups = responseDto.newsFeedContent.groups

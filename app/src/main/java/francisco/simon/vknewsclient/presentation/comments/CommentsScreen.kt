@@ -23,11 +23,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +36,7 @@ import coil3.compose.AsyncImage
 import francisco.simon.vknewsclient.R
 import francisco.simon.vknewsclient.domain.entity.FeedPost
 import francisco.simon.vknewsclient.domain.entity.PostComment
-import francisco.simon.vknewsclient.presentation.NewFeedApplication
+import francisco.simon.vknewsclient.presentation.getApplicationComponent
 
 @Composable
 fun CommentsScreen(
@@ -44,8 +44,9 @@ fun CommentsScreen(
     onBackPressed: () -> Unit,
 ) {
 
-    val component = (LocalContext.current.applicationContext as NewFeedApplication)
-        .component.getCommentsScreenComponentFactory().create(feedPost)
+    val component = getApplicationComponent()
+        .getCommentsScreenComponentFactory()
+        .create(feedPost)
 
 
     val viewModel: CommentsViewModel = viewModel(
@@ -53,7 +54,14 @@ fun CommentsScreen(
     )
     val screenState = viewModel.screenState
         .collectAsState(CommentsScreenState.Initial)
+    CommentScreenContent(screenState, onBackPressed)
+}
 
+@Composable
+private fun CommentScreenContent(
+    screenState: State<CommentsScreenState>,
+    onBackPressed: () -> Unit
+) {
     when (val currentState = screenState.value) {
         is CommentsScreenState.Comments -> {
             CommentScreenSpecific(

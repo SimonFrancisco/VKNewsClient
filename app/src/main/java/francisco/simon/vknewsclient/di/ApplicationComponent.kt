@@ -3,7 +3,7 @@ package francisco.simon.vknewsclient.di
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
-import francisco.simon.vknewsclient.presentation.main.MainActivity
+import francisco.simon.vknewsclient.presentation.ViewModelFactory
 
 @ApplicationScope
 @Component(
@@ -13,7 +13,7 @@ import francisco.simon.vknewsclient.presentation.main.MainActivity
 )
 interface ApplicationComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun getViewModelFactory(): ViewModelFactory
 
     fun getCommentsScreenComponentFactory(): CommentsScreenComponent.Factory
 
